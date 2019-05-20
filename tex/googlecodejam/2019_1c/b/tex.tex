@@ -1,0 +1,134 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{Power Arrangers パワーアレンジャーズ} \author{} \date{}
+\begin{document}
+\maketitle
+\section*{Problem 問題}
+\begin{paracol}{2}
+Go, go, Power Arrangers!
+
+Everyone loves this team of five superhero high school students who wear the letters A, B, C, D, and E.
+
+When they stand side by side to confront evil monsters, they arrange their team in one of 120 possible different left-to-right orders, giving them various different tactical superpowers.
+
+They are even more popular than the Teenage Permutant Ninja Turtles!
+\switchcolumn
+ゴー、ゴー、パワーアレンジャーズ！
+
+それぞれが文字A、B、C、D、Eを着た5人の高校生のスーパーヒーローのこのチームを誰もが愛している。
+
+悪しきモンスターらに対峙して彼らが互いに横に並ぶと、彼らは左から右の順に120通りの異なる順番の一つへとチームを並び替え、それが彼らに様々な戦術的なスーパーパワーをもたらす。
+
+彼らはパーミュテーションなティーネージャーのニンジャタートルズよりもさらに人気がある。
+\end{paracol}
+\vspace{\baselineskip}
+\begin{paracol}{2}
+Some critics of the show claim that the team only has its arrangment gimmik so that the owners of the show can sell 120 seprate sets of 5 action figures, each of which features the team in a different left-to-right order, glued to a base so that the set cannot be rearranged.
+
+As an avid Power Arrangers fan, you have collected 119 of these sets, but you do not remember which set you are missing.
+
+Your 119 sets are lined up horizontally along a shelf, such that there are a total of $119\times 5=595$ action figures in left-to-right order.
+
+You do not remember how the sets are aranged, but you know that the permutation of the sets is selected uniformly at random from all possible permutations, and independently for each case.
+\switchcolumn
+このショーについて存在する批判として、このチームについては並べられた商品しか存在せず、ショーのオーナーが5個のアクションフィギュアの120個の別のセットを販売できるようになっている点が挙げられる。それらは再配置できないよう台座に接着されているのだ。
+
+パワーアレンジャーの熱心なファンの一人として、あなたはそれらセットのうち119個を手に入れた。しかしどれが欠けているのか忘れてしまった。
+
+あなたの119個のセットらは、棚に横に並んでいる。合計で$119\times 5=595$個のアクションフィギュアが左から右に並んでいる。
+
+それらセットがどんな順番なのか、あなたは覚えていない。ただし、各テストケースについて独立に、セットらの順列はありうる順列から一様に無作為にに選ばれたことは知っている。
+\end{paracol}
+\vspace{\baselineskip}
+\begin{paracol}{2}
+You do not want to waste any time figuring out which set you are missing, so you plan to look at the letters on at most {\bf F} figures on the shelf.
+
+For instance, you might choose to look at the letter on the eighth figure from the left, which would be the third figure from the left in the second set from the left.
+
+When looking at a figure, you only get the letter from that one figure; the letters are hard to see, and the different team members look very similar otherwise!
+
+After checking at most {\bf F} figures, you must figure out which of the sets is missing, so you can complete your collection and be ready to face any possible evil threat!
+\switchcolumn
+あなたは、欠けているセットがどれか導くために少しも無駄な時間は使いたくないので、棚の上の{\bf F}個の人形だけ見ようと計画している。
+
+例えば、あなたがもし、左から8個目の人形にある文字を見ようとを選択したならば、その人形は、左から2個目にあるセットの左から3個目にある人形だ。
+
+ある人形を見ているときには、その1つの人形からの文字しか分からない。文字は見やすくなく、また、文字以外のことについてはチームの他のメンバー同士はとてもよく似ているからだ！
+
+最大で${\bf F}$個の人形をチェックしたあと、あなたはどのセットが欠けているか求めねばならない。そうすることでコレクションが完成し、将来ありうるどんな悪しき脅威にも立ち向かう準備ができるのだ！
+\end{paracol}
+\subsection*{Input and output 入力と出力}
+\begin{paracol}{2}
+This is an interactive problem.
+
+You should make sure you have read the information in the Interactive Problems section of our FAQ.
+
+Initially, your program should read a single line containing two integers {\bf T}, the number of test cases, and {\bf F}, the number of figures you are allowed to inspect per test case.
+
+Then, you need to process {\bf T} test cases.
+\switchcolumn
+この問題はインタラクティブ問題である。
+
+私達のFAQのインタラクティブ問題の節の情報を読み終えているかどうか、あなたは確認すべきである。
+
+まず始めに、あなたのプログラムは2つの整数{\bf T}と{\bf F}を含む1行を読み込むべきだ。それぞれ、テストケースの個数と、テストケースごとに調査可能な人形の個数である。
+
+それから{\bf T}個のテストケースらを処理する。
+\end{paracol}
+\vspace{\baselineskip}
+\begin{paracol}{2}
+Within each test case, the missing set of figures is chosen uniformly at random from all possible sets, and the order of the remaining sets is chosen uniformly at random from all possible orders as well.
+
+Every choice is made independently of all other choices and of your inputs.
+\switchcolumn
+それぞれのテストケースのなかにおいて、人形らの欠けているセットは、ありうるすべてのセットから一様に無作為に選ばれる。また、残りのセットらが並ぶ順序も、ありうる順序らから一様に無作為に選ばれる。
+
+すべての無作為な選択は、他のどの選択とも、あなたからの入力とも独立に行われる。
+\end{paracol}
+\vspace{\baselineskip}
+\begin{paracol}{2}
+In each test case, your program will process up to {\bf F} + 1 exchanges with our judge.
+
+You may make up to {\bf F} exchanges of the following form:
+\switchcolumn
+各テストケースにおいて、あなたのプログラムは審判と最大で{\bf F} + 1個の交換を行う。
+
+あなたは最大で{\bf F}個の次の形の交換を作成して実施する:
+\end{paracol}
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\begin{itemize}
+\item Your program outputs one line containing a single integer between 1 and 595, inclusive, indicating which figure (in left-to-right order along the shelf) you wish to look at. As a further example, 589 would represent the fourth figure from the left in the second set from the right.
+\item The judge responds with one line containing a single uppercase letter A, B, C, D, or E, indicating the letter on that figure. If you sent invalid data (e.g., a number out of range, or a malformed line), the judge will instead respond with one line containing the single uppercase letter N.
+\end{itemize}
+\switchcolumn
+\begin{itemize}
+\item
+
+\end{itemize}
+\end{paracol}
+
+
+
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

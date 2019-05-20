@@ -1,0 +1,61 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{Irrlicht Engineについて} \author{} \date{}
+\begin{document}
+\maketitle
+
+
+
+\section*{Irrlicht Engine}
+と書いて、「イアリハト・エンジン」と読む3Dエンジンがあるらしい。今では人気がなさそうだが、かつて日本語の情報がいくらかあったようだ。aptコマンドでインストールできる点が気になったので、少し触れてみたい。開発者は、Nikolaus Gebhardt。
+
+
+\section*{installation}
+\begin{verbatim}
+sudo apt install libirrlicht-dev
+\end{verbatim}
+
+\section*{依存性}
+他にも下記をインストールした。
+
+\begin{verbatim}
+
+build-essential
+codeblocks
+freeglut3-dev
+libboost-dev
+libfreetype6-dev
+libgl1-mesa-dev
+libglew1.5-dev
+libglu1-mesa-dev
+libopenal-dev
+libtheora-dev
+libxcursor-dev
+libxext-dev
+libxxf86vm-dev
+mesa-common-dev
+xserver-xorg-dev
+x11proto-xf86vidmode-dev
+\end{verbatim}
+
+
+\section*{simpgさんのhello, world}
+http://d.hatena.ne.jp/simpg/20131012 にあった次のコードは、g++ example.cpp -lIrrlicht としてコンパイルでき動作した。-lGLもつけたほうがよい場合がありそうである。
+
+\verbatiminput{input/001/001.cpp}
+
+\section*{終了方法}
+
+Alt+F4で終了できる。
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}

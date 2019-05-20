@@ -1,0 +1,62 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{Learning Swift Language on Ubuntu:\\Generics\\Automatic Reference Counting\\Memory Safety\\Access Control\\Advanced Operators} \author{} \date{}
+\begin{document}
+\maketitle
+
+
+\section*{strong/weak reference}
+強い参照と弱い参照、さらにunownedな参照というものがあるらしい。ARC (Automatic Reference Counting)は強い参照が0個になったオブジェクトをデストラクトする仕組みなので、強い参照で参照循環(retain cycle)になっているとメモリリークとなるらしい。
+
+強参照循環は悪だろうか。GC (Garbage Collection)のうちARCでないものを単にGCと呼ぶことにすれば、GCは参照が到達可能なものを残す仕組みだろう。到達可能だとはある意味では主観的だ。（というのはつまり、相手からすれば到達可能でなくなるのはこちらであるから。）　中心となるグラフからある部分が切り離されたときに、そこにある強参照循環を解いてやれば、ARCによって残りはdeinitされることになるのだろう。しかしそのような、自らGCを実装するようなアプローチはまず考えなくていいだろう。だから強参照循環は悪いものだと考えられる。
+
+すべての参照を弱参照にしてはどうだろうか。それはできない。ただちにdeallocateされてしまうからだ。ゆえに素朴に考えると、存在すべきオブジェクトらについて強参照は木構造になっていると考えられる。有向非巡回グラフ(Directed Acyclic Graph, DAG)という考え方のほうが近いかもしれない。問題は、あるオブジェクトの参照を親から行うか子から行うかだろう。それは時々の設計だろう。
+
+弱い参照とは別に、unownedなるものがある。これは弱い参照の一種だと考えていいのではなかろうか。implicitly unwrappedなものだと考えられる。古典的な参照はnilを許しただろう。だからnilかどうかの検査すらできないunownedな切れた参照はより厄介かもしれない。しかしそんな事態を防ぐのは設計の責任だ。
+
+将来の構成の変化に備えて、weakな参照を多用してしまえという考え方もあるようだ。短所は、Optionalが氾濫してコードが劣化することらしい。Optionalは可能なら最小にすべきものだと思われる。そして、将来的な構成の変化を事実上考えなくていい状況はあるだろう。unownedはletつまり定数にできて好ましい。
+
+循環参照が生じない限りにおいて強参照を使えばいい。循環参照が生じて、明らかに永続的な包含関係があるときは、unowned letを使えばいい。チュートリアルにはunowned(unsafe)のほうがパフォーマンスがよいとあるが、さほど人気はないようだ。循環参照が生じるが包含関係にないときは、weak varを使えばいい。強参照によって存在を保つのはそのときには、上層の責任だ。
+
+
+
+\section*{implementation}
+\verbatiminput{input/022_generics.swift}
+
+\section*{implementation}
+\verbatiminput{input/023_automatic_reference_counting.swift}
+
+\section*{implementation}
+\verbatiminput{input/024_memory_safety.swift}
+
+\section*{implementation}
+\verbatiminput{input/025_access_control.swift}
+
+\section*{implementation}
+\verbatiminput{input/026_advanced_operators.swift}
+
+
+
+
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

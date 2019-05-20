@@ -1,0 +1,90 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{スマートフォンアプリの開発について} \author{} \date{2019年5月}
+\begin{document}
+\maketitle
+
+スマートフォン(smartphone)は広く用いられている。一つの画期をなしたApple初代iPhoneは2007年に登場している。世界で用いられているほとんどのスマートフォンはGoogle Androidだが、日本では半数がApple iPhoneだという。現在は明確な2強体制にあるといえる。
+
+スマートフォンのソフトウェアの単位をアプリ(app)という。アプリの公式のマーケットはOS企業が管理しているが、一定の条件でそこに参入することが認められている。アプリを開発して販売し、資金を得ることも原理的には可能だ。競争は恐らく厳しい。
+
+アプリを開発するにあたっては、特別なフレームワークを用いたり、本体をウェブアプリケーションとするのでなければ、OS固有のプログラミング言語を用いる必要がある。つまり、OSがiOSかAndroidかということによって多くが異なる。iOSはiPhoneのOSだが、iOSを採用しているシリーズとしては他にiPadなどがある。
+
+iOSの開発言語はObjective-CかSwiftだ。Androidの開発言語はJavaのほかKotlinというものがあるようだ。iOSアプリの開発にはmacOSを搭載したコンピュータが不可欠である。Objective-CとSwiftとでは、現在ではSwiftに圧倒的な人気があるようだ。JavaとKotlinでは、まだJavaに圧倒的な人気があるようだ。
+
+\section*{Objective-C}
+はかなり個性的な言語であるようだ。Smalltalkの系譜にあると同時に、低レベルでパフォーマンスがよいらしい。教養としても価値はありそうだが、Swiftが時流ならそれを重視しておくべきだろう。ただ、Swiftが単純な上位互換ということではないらしい。2007年のMac OS X v10.5 Leopardからは、ガベージコレクションなどを導入したObjective-C 2.0に仕様が更新された。学習コストはおそらくSwiftのほうが低い。
+
+ところで、Objective-CやSwiftの周りにはABIという言葉が出てくるようだ。ABIとは？　Application Binary Interfaceの略称である。
+
+Objective-CやSwiftからはCやC++のライブラリが簡単に使えるために、パフォーマンスに深刻な問題が生じることは避けやすいようである。しかし、実際にウェブの記事を眺めると、SwiftとObjective-CとC++とCの連携のしやすさには大いに疑問があるようだ。Objective-CとCの連携についてはおそらくまったく問題がないので、そこを重視してもいいかもしれない。
+
+\section*{macOS}
+iOSアプリを開発するにはmacOSが必要だ。しかし全体的に高価だ。各モデルの最低価格は、128 GBストレージなどによるものであり、用途によっては不足するだろう。
+
+大きな分類として、ノート型とデスクトップ型とがある。想定される用途が異なるのだろう。すでにディスプレイなどの周辺機器が別にあるなら、Mac miniも合理的な選択肢に見える。しかし、モバイルする必要性もあるなら、ノート型から外部ディスプレイを使うのも手ではあるだろう。
+
+\begin{table}\centering
+\begin{tabular}{lrr}
+Model&JPY&Weight \\\hline
+MacBook 12-inch&142,800-&0.92 \\
+MacBook Air 13-inch&98,800-&1.35 \\
+MacBook Air 13-inch&134,800-&1.25 \\
+MacBook Pro 13-inch&142,800-&1.37 \\
+MacBook Pro 13-inch&198,800-&1.37 \\
+MacBook Pro 15-inch&258,800-&1.83 \\\hline
+iMac 21.5-inch&120,800-&5.66 \\
+iMac 21.5-inch&142,800-&5.60 \\
+iMac 27-inch&198,800-&9.42 \\
+iMac Pro 27-inch&558,800-&9.70 \\
+Mac Pro&298,800-&5.00 \\
+Mac mini&89,800-&1.30 \\\hline
+\end{tabular}
+\caption{Macの各モデル}
+\end{table}
+
+\begin{table}\centering
+\begin{tabular}{lrrrl}
+Model&inch&JPY&Weight&Apple Pencil \\\hline
+iPad Pro &12.9&111,800-&0.631&G2; USB-C \\
+iPad Pro &11.0&89,800-&0.468&G2; USB-C \\
+iPad Air&10.5&54,800-&0.456&G1; Lightning \\
+iPad&9.7&37,800-&0.469&G1; Lightning \\
+iPad mini&7.9&45,800-&0.300&G1; Lightning \\\hline
+\end{tabular}
+\caption{iPadの各モデル}
+\end{table}
+
+
+\section*{iPhone実機テストについて}
+App Storeにはアプリは気楽に登録できないそうだが、iPhoneなどでの実機テストは自由に行えるのだろうか。
+
+2015年にリリースされたiOS 9からは、Apple Developer Programに有料の登録をせずとも、Apple IDでサインインするだけで気楽に実機テストができるようになった。
+
+iPhoneでアプリが実行できるのは、ビルドしてから1週間程度だけである。1週間に1度ビルドしてインストールするのは、さほど手間ではないだろう。
+
+\section*{Android Studio}
+macOSやiOSのプログラム開発のためのIDEとしてはXcodeがあるが、AndroidのためのIDEはAndroid Studioだ。似ているが異なるものとして、開発者用のAPIであるAndroid SDKがある。Android SDKを用いるIDEとしては、Android Studioが唯一の選択肢であるようだ。
+
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

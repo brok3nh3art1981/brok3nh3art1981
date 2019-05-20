@@ -1,0 +1,100 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{Ubuntu Linux上におけるSwift言語の検証\\swift.org - A Swift Tour を消化する} \author{} \date{2019年5月14日(火)}
+\begin{document}
+\maketitle
+
+\section*{abstract 要旨}
+Swift言語の実行環境をUbuntu Linux OS上にダウンロードして実行した。swift.orgのA Swift Tourという長い1ページのチュートリアルに取り組んだ。macOSやiOSに依存する部分がなく、言語仕様を学ぶ上で支障がなかった。
+
+
+
+\section*{introduction 序論}
+Swiftというプログラミング言語がある。各バージョンの登場時期は表の通りである。iOS用プログラムをmacOS上で開発する際の実装にこの言語を用いることが念頭にある。しかしながらここでは、Ubuntu OS上でSwiftを用いることについてのみ考える。
+
+SwiftはObjective-Cより入りやすいらしいが、実際には多機能なようだ。UbuntuでSwiftを使った場合にはiOSやmacOSのランタイムは使えないらしいが、言語仕様自体が大きいために、言語仕様を学ぶためには、UbuntuでSwiftを動かす意義もあるかもしれない。
+
+\begin{table} \centering
+\begin{tabular}{ll}
+date & version \\\hline
+2014-09-09&Swift 1.0 \\
+2014-10-22&Swift 1.1 \\
+2015-04-08&Swift 1.2 \\
+2015-09-21&Swift 2.0 \\
+2016-09-13&Swift 3.0 \\
+2017-09-19&Swift 4.0 \\
+2018-03-29&Swift 4.1 \\
+2018-09-17&Swift 4.2 \\
+2019-03-25&Swift 5.0 \\\hline
+\end{tabular}
+\caption{Swift language version history}
+\end{table}
+
+\section*{sudo snap install swift}
+というパッケージがあるが現在は動作しないとのこと。
+
+https://askubuntu.com/questions/1142200/how-can-i-install-swift-on-ubuntu-19-04/1142272
+
+\begin{quotation}
+Ubuntu has a swift snap package that is buggy and cannot be run at all. What "cannot be run at all" means is that not only does the swift snap package not run at all, but it can't be hacked to run at all without rebuilding the swift snap package. Hopefully this bug will be fixed soon, so that swift can be installed the nice way with sudo snap install swift
+
+Ubuntuにswiftのsnapパッケージがあるが、バグがあり、まったく実行できない。ここで「まったく実行できない」とはつまり、そのswiftのsnapパッケージがまったく動かないのみならず、swiftのsnapパッケージをビルドしなおすのでなければ、実行するように調整することもできないという意味だ。望むらくは、バグが近く修正され、sudo snap install swiftとしてインストールできることを。
+\end{quotation}
+
+なおアンインストールはsudo snap remove swiftとしてできる。
+
+
+
+\section*{installation}
+swift.orgから「swift-5.0.1-RELEASE-ubuntu18.04.tar.gz」というファイルをダウンロードした。これを展開してそのなかのusr/bin/にある実行ファイルらを使えばよいらしい。
+
+次のようにしてパスを通せる。
+
+\verb|export PATH="~/swift-5.0.1-RELEASE-ubuntu18.04/usr/bin:$PATH"|
+
+
+
+\section*{hello, world}
+\verbatiminput{input/001/001_hello.swift}
+
+
+
+\section*{A Swift Tour}
+という解説がswift.orgにある。
+
+
+
+\section*{implementation}
+\verbatiminput{input/001/002_tour.swift}
+
+\section*{If not let - in Swift}
+https://stackoverflow.com/questions/27412735/if-not-let-in-swift
+
+if not let x = ...と書くことはできない。if x == nil と書けばいい。
+
+
+
+\section*{conclusion 結論}
+Swift言語の最も基本的な概観に触れることができた。言語仕様の学習であったために、Ubuntu OS上で問題なく取り組めた。
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

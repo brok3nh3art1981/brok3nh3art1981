@@ -1,0 +1,327 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{『TensorFlowで学ぶディープラーニング入門\\畳み込みニューラルネットワーク徹底解説』\\読書ノート} \author{} \date{}
+\begin{document}
+\maketitle
+中井悦司（なかい えつじ）による2016年9月27日の本。
+
+\verb|https://github.com/enakai00/jupyter_tfbook|
+
+
+
+\section*{p. 19}
+4次関数によるモデル:
+$$ y=w_0+w_1x+w_2x^2+w_3x^3+w_4x^4$$
+
+ここで$x$は月であり$x\in\{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12\}$。$y$は$x$月について予測される月中平均気温（℃）。$w_0, w_1, w_2, w_3, w_4$はパラメータ。
+
+
+
+\section*{p. 20}
+誤差関数(error function)として二乗誤差(squared error)を考える:
+$$E=\frac12\sum_{n=1}^{12} (y_n-t_n)^2$$
+
+ここで$y_n$は$n$月の予測気温。$t_n$は$n$月の実際の気温である。
+
+
+
+\section*{p. 22}
+直線を表す数式:
+$$f(x_1,x_2)=w_0+w_1x_1+w_2x_2=0$$
+
+この形だと有名な$y=ax+b$よりも$x_1$と$x_2$を対称に扱える。
+
+$f(x_1,x_2)=0$が境界となるほか、境界から離れるほど$f(x_1,x_2)$の値が$\pm\infty$に近づく。
+
+
+
+\section*{p. 23}
+検査結果$(x_1,x_2)$のときの感染確率$P(x_1,x_2)$をsigmoid関数$\sigma$を使って表す:
+$$P(x_1,x_2)=\sigma(f(x_1,x_2))$$
+
+
+
+\section*{p. 24}
+1層のノードからなるニューラルネットワークの例。
+$$z=\sigma(f(x_1,x_2))$$
+where
+$$f(x_1,x_2)=w_0+w_1x_1+w_2x_2$$
+
+
+
+\section*{p. 25}
+2層のノードからなるニューラルネットワークの例。
+$$z=\sigma(f(z_1,z_2))$$
+where
+\begin{align*}
+z_1 &= \sigma(f_1(x_1,x_2)) \\
+z_2 &= \sigma(f_2(x_1,x_2))
+\end{align*}
+where
+\begin{align*}
+f_1(x_1,x_2) &= w_{10}+w_{11}x_1+w_{12}x_2 \\
+f_2(x_1,x_2) &= w_{20}+w_{21}x_1+w_{22}x_2 \\
+f(z_1,z_2) &= w_0+w_1z_1+w_2z_2
+\end{align*}
+
+このニューラルネットワークには$w_n$という形の合計9個のパラメータが含まれている。
+
+ニューラルネットワークをより複雑にするためにノードを増やす方法には次の2つがある。
+\begin{itemize}
+\item 層の個数を増加する
+\item 層にあるノードの個数を増加する
+\end{itemize}
+
+
+
+\section*{p. 30}
+$x$月と予測気温$y$との関係:
+$$y=w_0+w_1x+w_2x^2+w_3x^3+w_4x^4$$
+
+2乗誤差による誤差関数$E$。ただし$y_n$は$n$月の予測気温。$t_n$は$n$月の実際の気温。
+$$E=\frac12\sum_{n=1}^{12}(y_n-t_n)^2$$
+
+これらを合わせると$n$月の予測気温$y_n$を次のように書ける。
+\begin{align*}
+\bm{y} &= (y_1, y_2, \cdots, y_{11}, y_{12}) \\
+y_n &= w_0+w_1n+w_2n^2+w_3n^3+w_4n^4 \\
+&= w_0n^0+w_1n^1+w_2n^2+w_3n^3+w_4n^4 \\
+&= \sum_{m=0}^4w_mn^m \\
+y_n &= y_n(w_0,w_1,w_2,w_3,w_4) \\
+\bm{y} &= \bm{y}(w_0,w_1,w_2,w_3,w_4)
+\end{align*}
+
+この$y_n$を上記の誤差関数$E$に代入して次の式を得る。
+\begin{align*}
+E(\bm{y}) &= \frac12\sum_{n=1}^{12}(y_n-t_n)^2 \\
+E(w_0,w_1,w_2,w_3,w_4) &= \frac12\sum_{n=1}^{12}
+\left(
+\sum_{m=0}^4w_mn^m-t_n
+\right)^2
+\end{align*}
+
+これを最小にする$w_0, \cdots, w_4$を求めたい。$w_0, \cdots, w_4$のそれぞれによる偏微分の値を0とした次の連立方程式を解くことになる。
+$$\frac{\partial E}{\partial w_m}(w_0,w_1,w_2,w_3,w_4) = 0 \quad\text{for}\ m=0,\cdots,4$$
+
+
+
+\section*{p. 31}
+偏微分とは、複数の変数を持つ関数をある1つの変数で微分することである。1変数の関数$y=f(x)$について最小値や最大値を求めるときに、微分係数を0とした次の方程式を解くのと本質的には同じだ。
+$$\frac{df}{dx}(x)=0$$
+
+この式は、入力$x$において関数$f$がどう動くかを問題にしている。入力$x$の付近でわずかに$x$が動くときに関数$f$の微小な動きとの比率が0であるとは、$x$の変化が$f$に影響していないということだ。つまりグラフはそこにおいて極小値や極大値や停留値を取る。$x$をそのように制約して求めるものが与式である。
+
+
+
+\section*{p. 32}
+次の2次関数を考える。
+$$h(x_1,x_2)=\frac14(x_1^2+x_2^2)$$
+
+その偏微分は次のようになる。
+\begin{align*}
+\frac{\partial h}{\partial x_1}(x_1,x_2) &= \frac12x_1 \\
+\frac{\partial h}{\partial x_2}(x_1,x_2) &= \frac12x_2
+\end{align*}
+
+このとき次のように書いて勾配ベクトルと呼ぶ。
+$$\nabla h(x_1,x_2) =
+\begin{pmatrix}
+\frac{\partial h}{\partial x_1}(x_1,x_2) \\[2mm]
+\frac{\partial h}{\partial x_2}(x_1,x_2)
+\end{pmatrix}
+=
+\begin{pmatrix}
+\frac12x_1 \\[2mm]
+\frac12x_2
+\end{pmatrix}
+=\frac12
+\begin{pmatrix}
+x_1\\x_2
+\end{pmatrix}
+$$
+
+勾配ベクトル$\nabla h(x_1, x_2)$の向きは、壁を登る方向に一致する。勾配ベクトルの大きさ$||\nabla h(x_1,x_2)||$は、壁を登る傾きに一致する。
+
+
+
+\section*{p. 33}
+勾配降下法:
+$$\bm{x}_{\rm new} = \bm{x}-\nabla h$$
+
+
+
+\section*{p. 34}
+次の2つの2次関数、$h_1$と$h_2$を考える。
+\begin{align*}
+h_1(x_1,x_2) &= \frac34(x_1^2+x_2^2) \\
+h_2(x_1,x_2) &= \frac54(x_1^2+x_2^2)
+\end{align*}
+
+それぞれの勾配ベクトルとして次のものが導ける。
+\begin{align*}
+\nabla h_1 = \frac32
+\begin{pmatrix}
+x_1\\x_2
+\end{pmatrix} \\
+\nabla h_2 = \frac52
+\begin{pmatrix}
+x_1\\x_2
+\end{pmatrix}
+\end{align*}
+
+この後者について
+$\bm{x}_{\rm new} = \bm{x}-\nabla h$
+という素朴な勾配降下法で$\bm{x}$を更新していくと、パラメータ$\bm{x} = (x_1,x_2)$は発散する。
+
+よって学習率$c$を用いて次のようにする。
+$$\bm{x}_{\rm new} = \bm{x}-c\nabla h$$
+
+
+二乗誤差$E(w_0,w_1,w_2,w_3,w_4) $を最小化するのにも同じことをする。
+$$\bm{w}_{\rm new} = \bm{w}-\epsilon\nabla E(\bm{w})$$
+
+ここで勾配ベクトル$\nabla E(\bm{w})$は次のものである。
+$$\nabla E(\bm{w}) =
+\begin{pmatrix}
+\frac{\partial E}{\partial w_0}(\bm{w}) \\
+\vdots \\
+\frac{\partial E}{\partial w_4}(\bm{w})
+\end{pmatrix}$$
+
+
+\section*{p. 38 環境準備}
+TensorFlowをインストール済みのDockerイメージが本書から提供されているので、それを使えばたいていの環境で同じコードを簡単に動かせるとのこと。
+
+Ubuntu OSについて考える。
+
+\begin{verbatim}
+$ sudo apt install docker.io
+$ docker --version
+Docker version 18.09.2, build 6247962
+\end{verbatim}
+
+\begin{quotation}
+In the past this way was discouraged as the docker package was super outdated. The universe sources are fairly recent now.
+\end{quotation}
+
+\begin{quotation}
+This is now the best way nowadays, since the Ubuntu repos are keeping up with the docker releases.
+\end{quotation}
+
+\begin{verbatim}
+# Docker HubでDockerイメージらを検索する。
+sudo docker search enakai00
+# DockerイメージをDocker Hubから取得する。
+sudo docker pull enakai00/jupyter_tensorflow
+# 取得済みのイメージらを一覧する。
+sudo docker images
+# Dockerコンテナを一覧する。
+sudo docker ps     # 実行中のもののみ表示する
+sudo docker ps -a  # 停止中のものも含めて表示する
+# Dockerコンテナをシャットダウンする。
+sudo docker stop example
+# Dockerコンテナを削除する。
+sudo docker rm example
+\end{verbatim}
+
+\begin{verbatim}
+# コンテナを生成して起動する。
+sudo docker run enakai00/jupyter_tensorflow
+# 名前つきでコンテナを生成する。
+sudo docker run --name nakai enakai00/jupyter_tensorflow
+# ホスト側のポートをコンテナ側のポートに転送する。http://localhost:8888/ で繋がるようになる。
+sudo docker run --name nakai -p 8888:8888 enakai00/jupyter_tensorflow
+# ログイン用のパスワードを書籍の通りに指定する。
+sudo docker run --name nakai -p 8888:8888 -e PASSWORD=passw0rd enakai00/jupyter_tensorflow
+\end{verbatim}
+
+
+
+\section*{p. 48 TensorFlowクイックツアー}
+\begin{verbatim}
+pip3 install tensorflow
+\end{verbatim}
+
+
+
+\section*{p. 59}
+予測気温の式。
+$$y(x)=w_0+w_1x+w_2x^2+w_3x^3+w_4x^4=\sum_{m=0}^4w_mx^m$$
+
+\section*{p. 67}
+$(x_1,x_2)$平面を分割する直線の式:
+$$f(x_1,x_2)=w_0+w_1x_1+w_2x_2=0$$
+
+この式は境界線から離れるにしたがって$\pm\infty$に向かって変化する。また、未知のパラメータ$w_0,w_1,w_2$を含んでいる。
+
+sigmoid関数:
+$$\sigma(x)=\frac1{1+e^{-x}}$$
+
+検査結果$(x_1,x_2)$に対して、ウィルスに感染している確率:
+$$P(x_1,x_2)=\sigma(f(x_1,x_2))$$
+
+教師データを考える。$n$番目の入力を$(x_{1n},x_{2n})$とする。$n$番目の正解を$t_n=0,1$とする。感染している場合が$t_n=1$である。現在のモデルによると、感染している確率は$P(x_{1n},x_{2n})$となる。この値に応じて確率的に予測してみる。
+
+$n$番目のデータを正しく予測する確率を$P_n$として、次が成り立つ。
+\begin{itemize}
+\item $t_n=1$の場合：$P_n=P(x_{1n},x_{2n})$
+\item $t_n=0$の場合：$P_n=1-P(x_{1n},x_{2n})$
+\end{itemize}
+
+1つの数式にまとめる。
+$$P_n = \{P(x_{1n},x_{2n})\}^{t_n} \{1-P(x_{1n},x_{2n})\}^{1-t_n}$$
+
+$N$個のデータすべてに正解する確率$P$を考えたい。
+$$P = P_1\times P_2\times\cdots\times P_N = \prod_{n=1}^NP_n$$
+$$P=\prod_{n=1}^N \{P(x_{1n},x_{2n})\}^{t_n} \{1-P(x_{1n},x_{2n})\}^{1-t_n} $$
+
+「与えられたデータを正しく予測する確率を最大化する」という方針でパラメータを調整する方法を「最尤推定法 (maximum likelihood estimation)」という。
+
+掛け算を大量に含む数式はTensorFlowでは効率がよくない。よって次の誤差関数を使う:
+$$E=-\log P$$
+
+なお対数については次の操作ができる:
+\begin{align*}
+\log ab &= \log a+\log b \\
+\log a^n &= n\log a
+\end{align*}
+
+これにより次の変形ができる。
+\begin{align*}
+E &= -\log P \\
+&= -\log\prod_{n=1}^N \{P(x_{1n},x_{2n})\}^{t_n} \{1-P(x_{1n},x_{2n})\}^{1-t_n} \\
+&= -\sum_{n=1}^N \log \left[ \{P(x_{1n},x_{2n})\}^{t_n} \{1-P(x_{1n},x_{2n})\}^{1-t_n} \right] \\
+&= -\sum_{n=1}^N \left[ \log \{P(x_{1n},x_{2n})\}^{t_n} + \log \{1-P(x_{1n},x_{2n})\}^{1-t_n} \right] \\
+&= -\sum_{n=1}^N \left[ t_n \log P(x_{1n},x_{2n}) + (1-t_n)\log \{1-P(x_{1n},x_{2n})\} \right] \\
+\end{align*}
+
+
+
+
+
+
+\section*{implementation}
+\verbatiminput{input/p051.py}
+
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

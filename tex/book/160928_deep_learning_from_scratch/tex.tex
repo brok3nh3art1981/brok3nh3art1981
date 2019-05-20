@@ -1,0 +1,253 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{『ゼロから作るDeep Learning\\Pythonで学ぶディープラーニングの理論と実装』\\読書ノート} \author{} \date{}
+\begin{document}
+\maketitle
+斎藤康毅（さいとう こうき。1984-）による2016年9月28日の本である。
+
+ソースコード: https://github.com/oreilly-japan/deep-learning-from-scratch
+
+deep-learning-from-scratch/.gitignoreに.DS\_Storeとある。これは何？　macOSのフォルダの状態データ。
+
+Pythonの文法チェッカーとしては{\tt flake8}コマンドがある。
+\section*{p. 2}
+ディープラーニングのフレームワークの例: Caffe、TensorFlow、Chainer、Theano。
+\section*{p. 20}
+『入門Python 3』、『Pythonによるデータ分析入門』という本がある。『Scipy Lecture Notes』というウェブサイトがある。.pdfファイルで全690ページ。
+\section*{p. 21}
+Frank Rosenblatt (1928-1971)。論文『The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain』(1958)がある。全23ページ。
+\begin{quotation}
+Prefiguring Cyberculture: An Intellectual History (2004-09-17):
+
+Shortly afterwards (July 11, 1971) Frank Rosenblatt, its guiding inspiration, died in a boating accident that some say was a suicide.
+
+But within the AI community, early connectionism had already met its demise (see, for example, Dreyfus and Dreyfus 1988, 24).
+
+In the absense of funding, and of the kinds of concrete successes in embodying biological principles in non-biological systems that might have generated new alliances and new sources of funding, the union promised between organisms and computers failed to materialize.
+
+Neural net models, which had been the heart of Rosenblatt's effort, had to wait another 15 years to be revived; interactionist models of development have had to wait even longer.
+
+Evidently, the soil of American science in the 1960s was not quite right for this largely European transplant to take root.
+
+Even so, as Hubert and Stuart Dreyfus write (1988, 24), ``blaming the rout of the connectionists on an antiholistic bias is too simple.''
+
+In a rather expansive sweep, they fault the influence of an atomistic tradition of Western philosophy, from Plato to Kant; von Foerster (1995), by contrast, blames both the funding policies of American science (the short fuding cycle, the emphasis on targeted research) and the excessively narrow training of American students.
+
+(Historians have yet to have their say on the matter.)
+\end{quotation}
+\section*{p. 22}
+$$y = 
+\begin{cases}
+0 & \text{if\quad} w_1x_1+w_2x_2\leq\theta\\
+1 & \text{if\quad} w_1x_1+w_2x_2>\theta
+\end{cases}
+$$
+
+\section*{p. 23}
+ANDゲートが、例えば$(w_1,w_2,\theta)=(0.5,0.5,0.7)$で実現できると記載がある。matplotlibでプロットしてみる。
+
+\verbatiminput{input/001/p023_plot_and.py}
+
+\begin{figure} \centering
+\includegraphics[width=100mm]{input/p023.pdf}
+\caption{$(w_1,w_2,\theta)=(0.5,0.5,0.7)$によるANDゲート}
+\end{figure}
+
+\section*{p. 26}
+$$y = 
+\begin{cases}
+0 & \text{if\quad} b+w_1x_1+w_2x_2\leq0\\
+1 & \text{if\quad} b+w_1x_1+w_2x_2>0
+\end{cases}
+$$
+
+
+\begin{figure} \centering
+\begin{tabular}{c}
+\begin{minipage}{0.3\hsize}
+\includegraphics[width=50mm]{input/p026_1.pdf}
+\end{minipage}
+\begin{minipage}{0.3\hsize}
+\includegraphics[width=50mm]{input/p026_2.pdf}
+\end{minipage}
+\begin{minipage}{0.3\hsize}
+\includegraphics[width=50mm]{input/p026_3.pdf}
+\end{minipage}
+
+
+\end{tabular}
+\caption{バイアスを用いたAND、NAND、ORゲート}
+\end{figure}
+
+\section*{p. 42}
+$$y=h(b+w_1x_1+w_2x_2)$$
+$$h(x) = 
+\begin{cases}
+0 & \text{if\quad} x\leq0\\
+1 & \text{if\quad} x>0
+\end{cases}
+$$
+
+これはbinary step関数とか、ヘヴィサイドの階段関数と呼ばれるようである。
+\section*{p. 45}
+sigmoid function。シグモイドとは、ギリシャ語の文字シグマのようにうねってるということ。
+$$ h(x) = \frac{1}{1+e^{-x}} $$
+
+\section*{p. 67}
+softmax function.
+
+$$ y_k = \frac{e^{a_k}}{\sum\limits_{i=1}^n e^{a_i}} $$
+
+
+\section*{p. 73}
+MNIST Databaseのデータをダウンロードなどしてくれるmnist.pyを本書が提供している。実行時の表示を以下にメモしておく。
+
+\begin{verbatim}
+$ python3 mnist.py 
+Downloading train-images-idx3-ubyte.gz ... 
+Done
+Downloading train-labels-idx1-ubyte.gz ... 
+Done
+Downloading t10k-images-idx3-ubyte.gz ... 
+Done
+Downloading t10k-labels-idx1-ubyte.gz ... 
+Done
+Converting train-images-idx3-ubyte.gz to NumPy Array ...
+Done
+Converting train-labels-idx1-ubyte.gz to NumPy Array ...
+Done
+Converting t10k-images-idx3-ubyte.gz to NumPy Array ...
+Done
+Converting t10k-labels-idx1-ubyte.gz to NumPy Array ...
+Done
+Creating pickle file ...
+Done!
+\end{verbatim}
+
+
+\section*{p. 75}
+学習済みパラメータを使ってMNIST Databaseのテスト用データを判定させる。正答率0.9352が得られる。第0層から第3層までを用いる3層のニューラルネットワークを用いる。各層のニューロンの個数は、$28\times 28=784$、50、100、$10=|\{0, 1, 2, 3, 4, 5, 6, 7, 8, 9\}|$であり、合計で$784+50+100+10=944$個だ。ここで隠れ層のニューロンの個数50と100は自由らしいが、学習済みパラメータを使うので動かすわけにいかない。なお、学習済みデータはそれなりに大きい。どのくらいの大きさだろうか。
+
+第1層の第0ニューロンを考えてみる。すると、バイアス1つと、784個の入力が入ってくる。よって重みの個数は$784+1=785$だろう。第1層の50個のニューロンについてこれは同様に言えるから、合計で、$50\times 785=39250$個の重みがあると考えられる。次に第2層の第0ニューロンを考えてみる。すると入力の個数は51個だろう。第2層の100個のニューロンについてこれは同様に言えるから、合計で、$100\times 51=5100$個の重みがあると考えられる。第3層の第0ニューロンについて考えてみる。すると入力の個数は101だろう。第3層の10個のニューロンについてこれは同様に言えるから、合計で、$10\times 101=1010$個の重みがあると考えられる。こうして得られた値の総和を求めると、$39250+5100+1010=45360$個の重みがあるということになる。
+
+p. 76のコードに次の美しくないコードを挿入してこの個数(45360)を確認した。{\tt print(sum(map(len, [W1.flatten(), W2.flatten(), W3.flatten(), b1.flatten(), b2.flatten(), b3.flatten()])))}　また、同じコードに{\tt f.write(str(network))}などと挿入して書き出したテキストファイルのサイズは895,218バイトであったが、これを重みの個数45360で割ると、19.73584656084656が得られる。1つの重み当たりテキストで20文字弱を占めているということになり、大きな矛盾はない。
+
+ニューロンが944個でシナプスが45360個だと考えられるだろう。$\frac{944}{45360}=0.020811...$であり、$\frac{45360}{944}=48.050847...$である。つまり1個のニューロンにつき50個弱のシナプスが存在する。これはもちろん、ネットワークの構成によるのだろう。なおおそらく、MNISTは最小の課題の一つだろう。ニューロンとシナプスが約1000個と約50000個だと思ってしまおうか。
+
+テスト用データの個数は10000個で、自分の環境でそれを処理するのは2秒ほどかかった。つまり、0.2 msで1個処理でき、1 msで5個処理できる。学習との計算量の比率はかなり異なると思っていいのだろう。多くの用途において、学習済みデータを用いた推論は、スマートフォンや組み込み機器のハードウェアで処理できるという印象は感じられた。
+
+なお、本書で提供されている学習済みパラメータの.pklファイルであるch03/sample\_weight.pklは181,853バイトだ。素朴にテキスト化したところ上記の通り895,218バイトだったわけである。$\frac{895,218}{181,853}=4.922756...$で5倍弱になっている。しかも精度が落ちているかもしれない。深層学習などを扱う上では、このようなデータを格納しておく必要性はしばしば生じそうだ。.pklは実用的にもよい選択肢なのだろうか。.zipにしてみるとそれぞれ、169,644バイトと297,814バイトであった。もし.pkl表現に後方互換性がなかったら、テキストファイルを.zipにすることは大きな損ではないかもしれない。.json形式が互換性が高いだろう。.csv形式が人気があるようだ。思うに、.csv形式は行で貪欲に完結しているのは長所だろう。
+
+\section*{p. 88}
+人気のある損失関数である2乗和誤差(mean squared error)。2で割るのは、微分したときに係数が消える利点のため。
+$$E=\frac12\sum_k (y_k-t_k)^2$$
+
+また別の人気のある損失関数である交差エントロピー誤差(cross entropy error)。
+$$E=-\sum_k t_k \log y_k$$
+
+N個の訓練データの損失関数の和。
+\begin{align*}
+E &=\frac1N\sum_n \left( -\sum_k t_{nk} \log y_{nk} \right) \\
+&=-\frac1N\sum_n\sum_k t_{nk}\log y_{nk}
+\end{align*}
+
+\section*{p. 97}
+微分。前方差分による。
+$$\frac{df(x)}{dx}=\lim_{h\to0}\frac{f(x+h)-f(x)}{h}$$
+
+
+\section*{p. 101}
+サンプルプログラムch04/gradient\_1d.pyのコードスニペットについて考える。
+\begin{verbatim}
+def tangent_line(f, x):
+    """関数fの入力xにおける接線を返す。"""
+    d = numerical_diff(f, x)  # xにおける微分係数を得る
+    print(d)                  # 0.1999999999990898
+    y = f(x) - d*x            # 高さはxのときf(x)だが0のときはdx減る
+    return lambda t: d*t + y  # y = ax + bならぬdt + yを返す
+\end{verbatim}
+
+
+\section*{p. 107}
+勾配法。
+$$x_0=x_0-\eta\frac{\partial f}{\partial x_0}$$
+$$x_1=x_1-\eta\frac{\partial f}{\partial x_1}$$
+
+\section*{p. 108}
+学習率が大きいからといって発散するものだろうか。またそもそも、勾配は方向を知るのにのみ使って、その大きさは用いなくてもよいのではないか。むしろ平坦な場所ほど大きく移動したい気もする。
+
+\section*{p. 118}
+のコードで学習が実行される。ここまでの本文では誤差逆伝搬法の内容の説明はないが、効果は同じということで、コードでは誤差逆伝搬法による方法がデフォルトでオンになっている。それでも少し時間がかかる。誤差逆伝搬法を使わない場合には100倍くらいかかるだろうか。
+
+どこでどの程度の時間がかかっているのだろう。巨大な行列の乗算が繰り返されるが、そもそも、行列の積を素朴に求めるときの計算量は何だろうか。$L\times M$行列$A$と$M\times N$行列$B$の積$C$を考えてみようか。Cに存在するLN個の要素それぞれは、AとBのそれぞれM個の要素について、各々を掛け、足し合わせたものである。よって、$LN(M+(M-1))$だと考えられる。大雑把に見れば、$LMN$だ。つまり、行列A、Bの辺の長さがどれも計算量に同様に作用している。
+
+第0層入力層に$28\times28=784$個のニューロンがあり、第1層隠れ層に50個のニューロンがあるとする。すると第0層と第1層を結ぶ辺は第1層のニューロン1個につき784個あるから合計で$50\times 784=39,200$個だろう。行列の積として考えると、$1\times784$行列$A$と$784\times 50$行列$B$の積$C$が$1\times 50$行列なのだと言える。$C$の各要素は784要素の積和なので全体の計算量が$1\times 784\times 50$という感じだろう。そして、実際に入力されるのはミニバッチである。
+
+複数の行列の積$ABCDEFG$のようなものを考えてみる。結合法則により乗算の順序は任意である。小さいものからやったほうが計算量が小さい気がする。しかし、ニューラルネットワークはsigmoid関数などの活性化関数で分断されているので、関係はないと思われる。
+
+活性化関数では累乗の計算がある。累乗の計算量は$O(\log n)$だったろう。とりあえず考えずにおこう。ミニバッチの大きさを100と考える。行列として書くと、$100\times78
+どこでどの程度の時間がかかっているのだろう。巨大な行列の乗算4$行列$A$と$784\times50$行列$B$と$50\times10$行列$C$から$100\times10$行列$D$を得ると考えられる。まず第1層の計算のために、$100\times784\times50=3,920,000$回四則演算して$100\times50$行列を得る。次に第2層を算出するために、$100\times50\times10=50,000$回四則演算して$100\times10$行列を得る。よって1個のミニバッチをpredict()するのに$3,920,000+50,000=3,970,000$回四則演算すると思われる。
+
+MNISTの訓練データは60,000個あるから、ミニバッチの大きさを100としたときには、$\frac{60,000}{100}=600$回が1 epochをなすのだろう。1 epochあたりの四則演算の回数は、$3,970,000\times600=2,382,000,000$だと概算される。勾配などの計算を考えずにである。すでに$10^9$のオーダーであるから、1分間かかるくらいの感じだろうか。本書のサンプルtrain\_neuralnet.pyにおいては、epoch=600で大きさ100のミニバッチを10,000回実行しているから、epoch=$\frac{10,000}{600}=16.\bar{6}$である。さほど時間はかからず手元の環境で45秒間ほどである。なお、numpyモジュールは複数のCPUコアを自動的に活用しているようである。
+
+数値差分により勾配を得る方法、それは重みつまり辺のすべてについて上下に動かし、そのたびにpredict()するのだから、大きな計算量になるとは想像できる。
+
+例えば本書サンプルtrain\_neuralnet.pyで言えば、iters\_num=10,000回ミニバッチを処理するたびにTwoLayerNet\#numerical\_gradient()しているが、TwoLayerNet\#numerical\_gradient()はそれぞれの重みのセットについてnumerical\_gradient()を呼び、numerical\_gradient()は$2\times3=6$回TwoLayerNet\#loss()を呼び、loss()はpredict()を呼んでいる。
+
+iter\_num=1としてpredict()が実行された回数を数えてみると79,523である。辺の数が$39,200+500=39,700$であったから、$2\times39,700=79,400$がほぼ近い。バイアスも数え入れて数え直そうか。$50\times785=39,250$、$10\times51=510$、$39,250+510=39,760$、$2\times39,760=79,520$となる。残りの3つについては、TwoLayerNetの外からloss()が1回、accuracy()が2回呼ばれているので、数が合うと考えられる。
+
+\section*{p. 141}
+ReLU (rectified linear unit):
+$$y = 
+\begin{cases}
+x & \text{if\quad} x>0\\
+0 & \text{if\quad} x\leq0
+\end{cases}
+$$
+その微分：
+$$\frac{\partial y}{\partial x} = 
+\begin{cases}
+1 & \text{if\quad} x>0\\
+0 & \text{if\quad} x\leq0
+\end{cases}
+$$
+
+\section*{p. 144}
+シグモイド関数の微分。
+$$sigmoid(x)=\frac{1}{1+e^{-x}}$$
+
+これを、$xy$と$e^x$と$x+y$と$\frac{x}y$に分けて考える。
+$$\frac{\partial L}{\partial y}(-y^2)\times1\times e^{-x}\times(-1) = \frac{\partial L}{\partial y}y^2 e^{-x}$$
+
+シグモイド関数の微分が得られた。これをさらに整理する：
+\begin{align*}
+\frac{\partial L}{\partial y}y^2 e^{-x} &= \frac{\partial L}{\partial y} \left( \frac{1}{1+e^{-x}} \right)^2 e^{-x} \\
+&=  \frac{\partial L}{\partial y} \frac{1}{1+e^{-x}} \frac{e^{-x}}{1+e^{-x}} \\
+&=  \frac{\partial L}{\partial y} \frac{e^{-x}}{(1+e^{-x})^2} \\
+&=  \frac{\partial L}{\partial y} \left( \frac{1+e^{-x}}{(1+e^{-x})^2} - \frac{1}{(1+e^{-x})^2} \right) \\
+&=  \frac{\partial L}{\partial y} \left( \frac{1}{1+e^{-x}} - \frac{1}{(1+e^{-x})^2} \right) \\
+&=  \frac{\partial L}{\partial y} \frac{1}{1+e^{-x}} \left( 1 - \frac{1}{1+e^{-x}} \right) \\
+&=  \frac{\partial L}{\partial y} y (1-y) \\
+\end{align*}
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

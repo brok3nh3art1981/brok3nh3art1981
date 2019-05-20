@@ -1,0 +1,73 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{Learning Swift Language on Ubuntu:\\Deinitialization\\Optional Chaining\\Error Handling\\Type Casting\\Nested Types\\Extensions\\Protocols} \author{} \date{}
+\begin{document}
+\maketitle
+\section*{abstract 要旨}
+Protocolという章の@objc属性に関する例示については、（「import Foundation」したとしても、）Ubuntuにおいて正常に動かなかった。
+
+\section*{4種類のエラー}
+Optionalの使い方について。エラーはすべてnilで流す感じで、開発時にはassert()で落とせばよいのではないか。
+
+https://github.com/apple/swift/blob/master/docs/ErrorHandlingRationale.rst
+
+というものがあるらしい。エラーには4種類ある。simple domain errorとrecoverble errorとuniversal errorとlogic failureである。simple domain errorにはOptional型でnil値を返し、recoverble errorには例外を投げ、universal errorはfatalError()で終了し、logic failureはprecondition()すればいい。なおエラーの原因が1つではない場合に、recoverble errorとして例外を投げることが適している。原因が1つならばOptionalが便利である。
+
+\section*{Optionalについてのある考え方}
+こういう考え方ができるのではないだろうか。つまり、生じうるエラーの種類が1種類になるまで、処理を細かく関数らに分解する。すると、1個の関数は1個のエラーを生じることになる。そのエラーをOptional型の返り値nilによって表現する。関数は、どのような入力に対して自らがnilを返すかを、コメントにおいて明示する。ユーザはそれを読んでその関数を利用する。
+
+返り値がOptionalであることは、APIとユーザの間のコミュニケーションであり、nilが返りうることについてユーザの注意を喚起しているにすぎない。ユーザは、決してnilが返らないように引数を処理してから関数に渡す。このようにして、関数がnilを返さないことは、APIのコメントとユーザの思考によって確認され、機械的には確認されない。
+
+ユーザは自らの責任において関数の返り値をすぐにbang (x!)する。nilをbangして実行時エラーになるなら、APIの説明か自身の考えたロジックに欠陥があったということになる。1つ1つのbangについて、ユーザはそれが正当である理由をすぐ近くにコメントで説明する。「bang because ...」といった記述が並ぶことになる。
+
+エラーを生じるうる複数の関数を利用する関数で生じうるエラーが1種類だとは考えられない。よって関数のエラーの種類を1種類にするとは、普遍的なまでの原則ではない。単に、とても重要な指針と見なすのみである。
+
+ネットワークアクセスなど、いかにも多様なエラーが生じそうな場合には、例外によって呼び出し元とコミュニケーションする。そうではなく、上記の趣旨がうまく適合しない場合には、precondition()によってプログラムをエラー終了してしまう。そのようにして、正常系でないコードを各部分に最小に押し込めることによって、コードの簡潔さを保ち、総合的な生産性に寄与する。特に巨大ないしmission criticalなプログラムについては別である。
+
+
+\section*{implementation}
+\verbatiminput{input/015_deinitialization.swift}
+
+\section*{implementation}
+\verbatiminput{input/016_optional_chaining.swift}
+
+\section*{implementation}
+\verbatiminput{input/017_error_handling.swift}
+
+\section*{implementation}
+\verbatiminput{input/018_type_casting.swift}
+
+\section*{implementation}
+\verbatiminput{input/019_nested_types.swift}
+
+\section*{implementation}
+\verbatiminput{input/020_extensions.swift}
+
+\section*{implementation}
+\verbatiminput{input/021_protocols.swift}
+
+
+
+
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

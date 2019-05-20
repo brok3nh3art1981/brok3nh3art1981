@@ -1,0 +1,64 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{Learning Swift Language on Ubuntu:\\Methods\\Subscripts\\Inheritance\\Initialization} \author{} \date{}
+\begin{document}
+\maketitle
+
+
+https://github.com/apple/swift
+
+このGitリポジトリでSwift言語は開発されている。このリポジトリのdocsディレクトリに資料がある。
+
+\section*{ASTとSILとIRの取得方法}
+.swiftのコードは、AST (Abstract Syntax Tree)とSIL (Swift Intermediate Language)とLLVM IR (Low Level Virtual Machine Intermediate Representation)をこの順に経てアセンブリになる。それらを得る方法は次のものである。
+
+\begin{itemize}
+\item {\tt swiftc -dump-parse example.swift\ \ \ \ \ \# AST（構文木）を出力する}
+\item {\tt swiftc -dump-ast example.swift\ \ \ \ \ \ \ \# 型チェック済みのASTを出力する}
+\item {\tt swiftc -emit-silgen example.swift\ \ \ \ \# sil\_stage rawを出力する}
+\item {\tt swiftc -emit-sil example.swift\ \ \ \ \ \ \ \# sil\_stage canonicalを出力する}
+\item {\tt swiftc -emit-ir example.swift\ \ \ \ \ \ \ \ \# LLVM IRを出力する}
+\item {\tt swiftc -emit-assembly example.swift\ \ \# アセンブリを出力する}
+\end{itemize}
+
+
+
+
+\section*{implementation}
+\verbatiminput{input/011_methods.swift}
+
+\section*{implementation}
+\verbatiminput{input/012_subscripts.swift}
+
+\section*{implementation}
+\verbatiminput{input/013_inheritance.swift}
+
+\section*{implementation}
+\verbatiminput{input/014_initialization.swift}
+
+
+
+
+
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

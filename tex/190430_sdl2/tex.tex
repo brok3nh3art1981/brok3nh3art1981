@@ -1,0 +1,79 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{SDL2について} \author{} \date{}
+\begin{document}
+\maketitle
+
+
+\section*{金子勇のNekoFlight}
+『NHKスペシャル 平成史スクープドキュメント 第8回 情報革命 ふたりの軌跡 ～インターネットは何を変えたか～ 』というテレビ番組が2019年4月28日(日)に放送された。「ふたり」として取り上げられたのは、Yahoo Japanの社長である井上雅博(1957-2017)とファイル共有ソフトWinnyを開発した金子勇(1970-2013)だ。Winnyについては、WinMXの改善版として作られた実情から、違法に使用されることは十分に認識できていたという批判があるようだ。
+
+個人的に興味を感じたのは、金子勇が趣味で作成した2つのゲームの画面が少し放送されたことだ。調べてみると、NekoFlightという3DフライトゲームとNekoFightという3D格闘ゲームであった。NekoFlightの画面をもう一度見てみたいと思ってウェブで検索したが、見当たらない。
+
+いや、見ることができた。https://twitter.com/\_neneco/status/1061477685547790337 にて、『Direct3Dモードが使えなかったり、正常終了しなかったりしたけど、Windows10でもNekoFlight動いた。』というコメントとともに動画が投稿されていた。『NekoFlightバイナリまだインターネットにあったので落としてWindows10で開いたらDirectXモードがなぜか動かないらしくイマイチだ』という別の人の呟きもあったので、本来の画質ではないのかもしれない。
+
+数十発のミサイルが敵の戦闘機を追尾して画面を舞う。自機の画面上の位置が操作に応じてフラフラと動くのは気味が悪い気がする。1998年のプログラムだ。商用のゲームとしては、Ace Combat 2が1997年に、Ace Combat 3が1999年に発売されている。PlayStation (1994-)の性能の限界のため、それらではミサイルの尾を引くことは少ししかできていない。NekoFlightは、『「マクロス」の納豆ミサイルの動きを実現することを目標として開発された』とのことである。Tech Winという雑誌の付録CD-ROMに掲載されたことがあるようだ。
+
+
+
+\section*{SDL2 (Simple DirectMedia Layer 2)}
+改めてゆっくりと動画を見ると、さほど驚かない。しかしそもそもああいった3Dのゲームはどうやって作るのだろうかと思った。可能なら楽をしたいという観点から、Pythonで使えるpygameというライブラリに注目した。するとその公式ページには、もうすぐSDL2に対応したpygame 2をリリースするつもりだと謳ってある。SDL2について検索すると、複数のウィンドウやフルスクリーンに対応したといったことであった。SDL2はC言語で書かれたC言語などで使えるライブラリだ。
+
+もとい、ポータビリティという意味では、ブラウザ上の環境が有利だと思う。つまりJavaScriptやAltJSといわれるもの達だ。一方で、C++などには、パフォーマンスチューニングを考える意味でストレスがないという魅力がある。よく整理された強力なライブラリをストレスなく使えるという意味では、Pythonが好きだ。しかし昔、(Will McGuganによる2007年のBeginning Game Development with Python and Pygameを読んで、) pygameで3D表示をしたことがあるが、何だかんだで、パフォーマンスのオーバーヘッドは少なくなかった気がする。
+
+よって、何らか、3Dで遊びたくなったときのためには、C++ + SDL2 というツールセットは、多少有用性の広い選択肢だろうと考えられる。
+
+
+\section*{installation}
+\begin{verbatim}
+sudo apt install libsdl2-dev        # SDL2本体
+sudo apt install libsdl2-image-dev  # .bmp以外の画像を読み込む機能
+sudo apt install libsdl2-gfc-dev    # 線を描画する機能
+sudo apt install libsdl2-ttf-dev    # フォントを描画する機能
+sudo apt install libsdl2-mixer-dev  # 音声出力する機能
+sudo apt install libsdl2-net-dev    # ネットワーク機能
+\end{verbatim}
+
+
+
+\section*{tutorial}
+Lazy Foo' Productions - Beginning Game Programming v2.0 というチュートリアルがあって、人気があるようだ。
+
+
+
+\section*{Lesson 05 - Optimized Surface Loading and Soft Stretching}
+SDL\_LoadBMP()して得たSDL\_SurfaceオブジェクトをSDL\_ConvertSurface()して得たSDL\_SurfaceオブジェクトをメインループでSDL\_BlitScaled()することで描画する。それが自分の環境では非常に遅いようだ。SDL\_LoadBMP()して得たSDL\_Surfaceオブジェクトをそのまま描画するならスムーズに動く。原因は不明である。
+
+
+
+\section*{3Dゲームエンジン}
+SDL2は直ちに3Dを専門とするライブラリではないらしい。他のライブラリについても少し調べよう。
+
+\begin{itemize}
+\item Unreal Engine: 1998年からC++で開発されているプロプライエタリなゲームエンジン。
+\item Unity: 2005年からC++で開発されているプロプライエタリなゲームエンジン。
+\item Torque: 2009年から開発されているMITライセンスのゲームエンジン。
+\item NeoAxis Engine.
+\item jMonkeyEngine: 2003年からJava言語で開発されているBSDライセンスのゲームエンジン。
+\item Panda3D: 2002年から開発されている修正BSDライセンスのPython言語向けゲームエンジン。
+\item Irrlicht Engine: zlibライセンスのゲームエンジン。ニコニコ動画を見ると、流行は2012年に終わっているようにも見える。sudo apt install libirrlicht-dev。
+\item OGRE: 1999年からC++言語で開発されているMITライセンスのレンダリングエンジン。
+\end{itemize}
+
+Irrlicht Engineはaptコマンドで簡単にインストールできた。日本語の情報も多少あるようだ。少し触るのは簡単なのではなかろうか。
+
+
+\section*{implementation}
+\verbatiminput{input/001/001.cpp}
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}

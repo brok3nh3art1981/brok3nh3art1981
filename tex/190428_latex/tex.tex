@@ -1,0 +1,130 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{\LaTeX について} \author{} \date{}
+\begin{document}
+\maketitle
+
+数式を含む人間系のための文書を記述する最も枯れた標準的な方法として\LaTeX がある。単純なテキストファイルやHTML文書のほうがずっと便利なことも多いが、思考のツールとしては\LaTeX が便利だという思いを持った。ここでは、\LaTeX の導入は設定についてメモする。
+
+\LaTeX ファイルの拡張子は.texであり、内容はバイナリではなくテキストである。平文の合間にバックスラッシュで始まるコマンドを記入することで組版をレイアウトする。コマンドは角括弧で任意な引数を受け取り、波括弧で必須な引数を受け取る。
+
+
+\verb|\documentclass{...}|と\verb|\begin{document}|の間の部分をプリアンブル(preamble)という。ここでは\verb|\documentclass{...}|も含めてプリアンブルと言ってしまおう。プリアンブルをどうしようか、というのが\LaTeX を扱う上での一つの議題である。
+
+プリアンブルは原則として、それぞれの.tex文書における必要性において変化する。しかし基本的なセットを考えて、テンプレートとして汎用してしまうことがしばしば便利だ。私についてはそれは自動化してあって、他の\LaTeX ファイルに記載されているPythonコードに格納されているから、同期の手間を避けるため、ここに再掲することはしない。ただし、そのテンプレートのプリアンブルについて説明をメモしておこうというのが、この文書の趣旨ではある。
+
+\section*{Ubuntu Linuxにおけるインストール}
+
+\begin{verbatim}
+# インストール
+# 基本的にtexliveというパッケージを使う。
+sudo apt install texlive-lang-cjk
+sudo apt install texlive-fonts-recommended
+sudo apt install texlive-fonts-extra
+
+# また、次のようにすればipaexフォントが.pdfに組み込まれる。
+# フォントを組み込まないと、日本語の表示が少し崩れる。
+sudo kanji-config-updmap-sys ipaex
+\end{verbatim}
+
+
+\section*{ドキュメントクラス}
+\begin{verbatim}
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\end{verbatim}
+をドキュメントクラスとして使うことにする。\LaTeX の処理系としては様々なものがあるが、uplatexを用いる。欧米において主流はpdflatexとのことだが、日本語の処理が理由で、そのまま応用できない。
+
+\begin{verbatim}
+# 原理的には次の2つのコマンドでコンパイルできる。
+uplatex tex.tex   # -> tex.dvi
+dvipdfmx tex.dvi  # -> tex.pdf
+\end{verbatim}
+
+用紙サイズと余白の大きさについては、この状態でデフォルトで用いることが、プリアンブルをシンプルにするためにはよいと思われる。
+
+
+\section*{usepackage paracol}
+ページの左側に英語を書き、右側に日本語を書くような対訳の文書を作成するには、次の方法が便利だ。
+\begin{verbatim}
+\usepackage{paracol}
+\begin{document}
+\begin{paracol}{2}
+hello, world
+\switchcolumn
+こんにちは世界
+\end{paracol}
+\end{document}
+\end{verbatim}
+
+\section*{usepackage seqsplit}
+は、長大な桁の整数を記入する際などに必要だ。
+
+\begin{verbatim}
+$2^{1000}$は\seqsplit{%
+107150860718626732094842504906...429831652624386837205668069376%
+}である。
+\end{verbatim}
+
+$2^{1000}$は\seqsplit{%
+10715086071862673209484250490600018105614048117055336074437503883703510511249361224931983788156958581275946729175531468251871452856923140435984577574698574803934567774824230985421074605062371141877954182153046474983581941267398767559165543946077062914571196477686542167660429831652624386837205668069376%
+}である。
+
+
+\section*{usepackage svg}
+\begin{verbatim}
+\documentclass[uplatex,dvipdfmx]{jsarticle}
+\usepackage{svg}
+\begin{document}
+\includesvg[width=0.8\textwidth]{svg.svg}
+\end{document}
+\end{verbatim}
+などとしてから次のようにすれば.svg画像を含む.pdfファイルを作成できる。
+\begin{verbatim}
+uplatex --shell-escape tex.tex
+dvipdfmx tex.dvi
+\end{verbatim}
+
+
+\section*{usepackage threeparttable}
+は表に注を入れるのに必要だ。
+
+\section*{usepackage verbatim}
+は\verb|\verbatiminput{...}|を用いるのに必要だ。verbatiminputは、verbatimにinputするものであり、プログラムコードなどを引用するのに便利である。プログラムコードを表示する標準的な方法はlistingを用いるものであり、しかし日本語が含まれているコードについてはjlistingを用いねばならないが、jlistingは標準パッケージに含まれておらず依存性が増加する短所があるため、素朴なverbatimを汎用している。
+
+\section*{TeXworksについて}
+.texファイルを編集するのに便利なプログラムとしてTeXworksというものがtexliveに同梱されている。Edit - Preferences... - Typesetting で次のように設定すると便利である。ただし、--shell-escapeオプションを指定することにはセキュリティ上の短所がある。これはusepackage svgのために指定している。このオプションを用いていいのは、処理対象のファイルがマルウェアでないと信用できる場合のみである。
+
+
+\begin{verbatim}
+Name:      upLaTeX
+Program:   ptex2pdf
+Arguments: -l
+           -u
+           -ot
+           --shell-escape
+           $synctexoption
+           $fullname
+\end{verbatim}
+
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
+
+
+
+
+
+
+
+
+
+

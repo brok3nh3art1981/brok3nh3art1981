@@ -1,0 +1,11 @@
+*.aux
+*.eps
+*.eps_tex
+*.jpg
+*.log
+*.out
+*.pdf
+*.png
+*.synctex.gz
+*.toc
+.vscode

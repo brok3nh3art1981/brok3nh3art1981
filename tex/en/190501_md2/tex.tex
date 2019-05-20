@@ -1,0 +1,179 @@
+%TEMPLATE-BEGIN 1
+\documentclass[uplatex,dvipdfmx]{jsarticle} \usepackage{amsmath,amssymb,bm}
+\usepackage{verbatim} \usepackage{svg} \usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref} \usepackage{pxjahyper}
+\usepackage{paracol} \usepackage{threeparttable}
+\usepackage{seqsplit}
+%TEMPLATE-END
+\title{MD2 (file format)} \author{} \date{}
+\begin{document}
+\maketitle
+
+
+\begin{paracol}{2}
+{\bf MD2} is a model format used by id Software's id Tech 2 engine and is thus used by Quake II as well as many other games, most of them using this engine, including SiN and Soldier of Fortune.
+
+The format is primarily used for animated player models although it can also be used for static models.
+
+Unlike more recent character model formats, MD2 animations are achieved via keyframes on a per-vertex level; the keyframes are stored within the model file and the engine interpolates between them to create a smooth animation.
+\switchcolumn
+{\bf MD2}はモデル形式の一つであり、id Softwareのid Tech 2エンジンで使われ、よってQuake IIを始めとするゲームらで使われた。このエンジンを使った主な例は、SiNとSoldier of Fortuneだ。
+
+この形式は第一には、アニメするプレイヤーのモデルらで使われたが、静的なモデルらのためにも使うことができる。
+
+より最近のキャラクターモデル形式とは異なり、MD2のアニメーションらは、頂点単位のキーフレームらで達成される。キーフレームらはモデルファイルに蓄えられており、エンジンは滑らかなアニメを生むためにそれらの間を補間する。
+\end{paracol}
+\section*{File format ファイル形式}
+\begin{paracol}{2}
+An MD2 file begins with a fixed length header followed by static model data such as texture coordinates.
+
+Dynamic data such as vertices and normals are stored within a number of file chunks called frames (or key-frames) which each have their own short headers.
+\switchcolumn
+一つのMD2ファイルは固定長のヘッダから始まり、テクスチャ座標などの静的なモデルデータがそれに続く。
+
+頂点らや法線らといった動的なデータは、フレーム（またはキーフレーム）と呼ばれるいくつかのファイルの塊のなかに格納される。その各々が自らの短いヘッダを持っている。
+\end{paracol}
+\vspace{\baselineskip}
+\begin{paracol}{2}
+In defining the file structure several data types will be referred to.
+
+int (4 bytes), short (2 bytes), and  char (1 byte)
+\switchcolumn
+ファイル構造の定義においては次のデータ型らが言及される。
+
+intは4、shortは2、charは1バイトだ。
+\end{paracol}
+
+\begin{table}
+	\begin{tabular}{llll}
+オフセット&データ型&名前&説明\\\hline
+0&int&ident& ``IDP2''に等しくなければならない\\
+4&int&version&MD2のバージョン。8でなければならない。\\
+8&int&skinwidth&テクスチャの幅\\
+12&int&skinheight&テクスチャの高さ\\
+16&int&framesize&1つのフレームのバイトサイズ\\
+20&int&num\_skins&テクスチャの数\\
+24&int&num\_xyz&頂点の数\\
+28&int&num\_st&テクスチャ座標の数\\
+32&int&num\_tris&三角形の数\\
+36&int&num\_glcmds&OpenGLコマンドの数\\
+40&int&num\_frames&フレームの合計個数\\
+44&int&ofs\_skins&スキン名らのオフセット（各スキン名はnull終端のunsigned char[64]）\\
+48&int&ofs\_st&s-tテクスチャ座標へのオフセット\\
+52&int&ofs\_tris&三角形らへのオフセット\\
+56&int&ofs\_frames&フレームのデータへのオフセット\\
+60&int&ofs\_glcmds&OpenGLコマンドらへのオフセット\\
+64&int&ofs\_end&ファイル終端へのオフセット\\\hline
+	\end{tabular}
+	\caption{MD2 Header}
+\end{table}
+
+\begin{table}
+	\begin{tabular}{ll}
+データ型&名前\\\hline
+short&s\\
+short&t\\\hline
+	\end{tabular}
+	\caption{オフセットofs\_stの位置にnum\_st個ある構造}
+\end{table}
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+To recover the floating-point texture coordinates as used by common 3D display API's such as OpenGL, divide the texture coordinates by the respective size dimensions of the texture:
+\switchcolumn
+OpenGLなどの一般的な3D表示APIで使われるような、浮動小数点でのテクスチャ座標を復元するためには、テクスチャのそれぞれの次元の大きさで対応するテクスチャ座標を除算する。
+\end{paracol}
+
+\begin{verbatim}
+sfloat = (float)s / texturewidth
+tfloat = (float)t / textureheight
+\end{verbatim}
+
+\begin{paracol}{2}
+At offset ofs\_tris there are num\_tris of the following structure
+\switchcolumn
+オフセットofs\_trisの位置にはnum\_tris個の次の構造がある。
+\end{paracol}
+
+\begin{verbatim}
+float scale[3]
+float translate[3]
+char name[16]
+\end{verbatim}
+
+\begin{paracol}{2}
+Then there is num\_xyz of this structure:
+\switchcolumn
+そしてnum\_xyz個、次の構造がある。
+\end{paracol}
+
+\begin{verbatim}
+unsigned char v[3]
+unsigned char lightnormalindex
+\end{verbatim}
+
+\begin{paracol}{2}
+Each vertex is stored as an integer array.
+
+To recover the floating-point vertex coordinates, the MD2 reader multiplies each coordinate by the scaling vector for the current frame and then adds the frame's translation vector; these vectors can be found in the frame's header.
+
+Alternatively, you can set the translation/scale matrix with model's values before rendering the model's frame (e.g. if using OpenGL); please note that scaling using glScale may de-normalize the surface normals.
+\switchcolumn
+各頂点は整数の配列に格納されている。
+
+浮動小数点な頂点座標を復元するためには、MD2を読み込んだ者は、現在のフレームのスケーリングベクトルで各座標を乗算し、そのフレームのトランスレーションベクトルを追加する。それらのベクトルはフレームのヘッダにあるかもしれない。
+
+あるいは、モデルの値を用いてトランスレーション／スケーリング行列を、（例えばOpenGLを用いるなら）モデルのフレームに設定することもできる。なお、glScaleを用いたスケーリングは面法線を非正規化することがあることに注意せよ。
+\end{paracol}
+\section*{Example 例}
+\begin{paracol}{2}
+This is an example of how to read a single frame and display it, written in pseudocode.
+\switchcolumn
+次に、一つのフレームを読んで表示する方法を、疑似コードで例示する。
+\end{paracol}
+
+\begin{verbatim}
+get struct triangle[], int num_tris, unsigned char vertex[],
+    float scale[3], float translate[3]
+
+int index=0
+int j=0
+short tri
+
+loop while index < num_tris
+  loop while j < 3
+
+    tri = triangle[ index ].textureindex[j]
+
+    texture_function_s texture_coordinates[ tri ].s / skinwidth
+    texture_function_t texture_coordinates[ tri ].t / skinheight
+
+    tri = triangle[ index ].vertexindex[j]
+
+    normal_function vertex[ tri ].lightnormalindex
+
+    vertex_function_x (vertex[ tri ].v[0] * scale[0]) + translate[0]
+    vertex_function_y (vertex[ tri ].v[1] * scale[1]) + translate[1]
+    vertex_function_z (vertex[ tri ].v[2] * scale[2]) + translate[2]
+
+    j = j + 1
+  end loop
+
+  index = index + 1
+end loop
+\end{verbatim}
+
+
+\section*{examination}
+
+.md2ファイルを実際に走査してoffsetを増加しつつ妥当な値が得られることを次のコードで確認した。
+
+\subsection*{Python code}
+\verbatiminput{input/read_md2.py}
+
+
+\vspace{\baselineskip}
+\begin{paracol}{2}
+\switchcolumn
+\end{paracol}
+\end{document}
